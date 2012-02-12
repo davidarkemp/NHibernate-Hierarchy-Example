@@ -25,7 +25,7 @@ namespace NHibernateHierarchy
             {
                 var top = new Organisation("Top Level");
                 
-                top.AddSubItem(new Organisation("Child 1"));
+                top.AddChild(new Organisation("Child 1"));
                 
 
                 new Organisation("Child 2", top);
@@ -41,7 +41,7 @@ namespace NHibernateHierarchy
             {
                 var topLevel = session.QueryOver<Organisation>().Where(o => o.Name == "Top Level").SingleOrDefault();
 
-                foreach (var subItem in topLevel.SubItems)
+                foreach (var subItem in topLevel.Children)
                 {
                     Console.WriteLine(subItem.Name);
                 }

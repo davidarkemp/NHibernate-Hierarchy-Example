@@ -11,7 +11,7 @@ namespace NHibernateHierarchy.Mappings
             
             Map(o => o.Name).Not.Nullable().Length(1024);
             
-            HasMany(x => x.SubItems)
+            HasMany(x => x.Children)
                 .Cascade.AllDeleteOrphan()
                 .Inverse() //if this is not inverse, then NHibernate inserts then updates
                 .KeyColumn("ParentId").ForeignKeyConstraintName("FK_Organisation_Parent")

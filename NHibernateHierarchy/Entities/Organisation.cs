@@ -6,11 +6,11 @@ namespace NHibernateHierarchy.Entities
 {
     public class Organisation
     {
-        protected readonly ICollection<Organisation> _subItems;
+        protected readonly ICollection<Organisation> _children;
 
         protected Organisation()
         {
-            _subItems = new Collection<Organisation>();
+            _children = new Collection<Organisation>();
         }
 
         public Organisation(string name) : this()
@@ -21,21 +21,21 @@ namespace NHibernateHierarchy.Entities
         public Organisation(string name, Organisation parent): this(name)
         {
             if (parent == null) throw new ArgumentNullException("parent");
-            parent.AddSubItem(this);
+            parent.AddChild(this);
         }
 
         public virtual Guid? Id { get; protected set; }
         public virtual string Name { get; set; }
 
-        public virtual IEnumerable<Organisation> SubItems
+        public virtual IEnumerable<Organisation> Children
         {
-            get { return _subItems; }
+            get { return _children; }
         }
 
-        public virtual void AddSubItem(Organisation subItem)
+        public virtual void AddChild(Organisation child)
         {
-            subItem.Parent = this;
-            _subItems.Add(subItem);
+            child.Parent = this;
+            _children.Add(child);
         }
 
         public virtual Organisation Parent { get; protected set; }
