@@ -2,3 +2,5 @@
 _ReSharper.*
 NHibernateHierarchy.suo
 packages/*
+**/bin/
+**/obj/
