@@ -8,9 +8,16 @@ namespace NHibernateHierarchy.Mappings
         public OrganisationMap()
         {
             Id(o => o.Id).GeneratedBy.GuidComb();
+            
             Map(o => o.Name).Not.Nullable().Length(1024);
-            HasMany(x => x.SubItems).Cascade.AllDeleteOrphan().Inverse().KeyColumn("ParentId").ForeignKeyConstraintName("FK_Organisation_Parent");
-            References(o => o.Parent).Column("ParentId").ForeignKey("FK_Organisation_Parent");
+            
+            HasMany(x => x.SubItems)
+                .Cascade.AllDeleteOrphan()
+                .Inverse()
+                .KeyColumn("ParentId").ForeignKeyConstraintName("FK_Organisation_Parent");
+            
+            References(o => o.Parent)
+                .Column("ParentId").ForeignKey("FK_Organisation_Parent");
         }
     }
 }
