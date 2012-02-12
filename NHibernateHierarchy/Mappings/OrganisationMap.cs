@@ -13,11 +13,13 @@ namespace NHibernateHierarchy.Mappings
             
             HasMany(x => x.SubItems)
                 .Cascade.AllDeleteOrphan()
-                .Inverse()
-                .KeyColumn("ParentId").ForeignKeyConstraintName("FK_Organisation_Parent");
+                .Inverse() //if this is not inverse, then NHibernate inserts then updates
+                .KeyColumn("ParentId").ForeignKeyConstraintName("FK_Organisation_Parent")
+                .Access.ReadOnlyPropertyThroughCamelCaseField(Prefix.Underscore)
+                .Fetch.Subselect();
             
             References(o => o.Parent)
-                .Column("ParentId").ForeignKey("FK_Organisation_Parent");
+                .Column("ParentId").ForeignKey("FK_Organisation_Parent"); //Could be Not Null if referenced a different table
         }
     }
 }

@@ -15,8 +15,7 @@ namespace NHibernateHierarchy
                 Fluently.Configure()
                 .Database(MsSqlConfiguration.MsSql2008.ConnectionString(s => s.FromConnectionStringWithKey("DB")).ShowSql)
                 .Mappings(m => m.FluentMappings.AddFromAssemblyOf<Program>().ExportTo(Console.Out))
-                .ExposeConfiguration(cfg => new SchemaUpdate(cfg).Execute(true,true))
-                ;
+                .ExposeConfiguration(cfg => new SchemaExport(cfg).Execute(true,true,false));
 
             var sessionFactory = configuration.BuildSessionFactory();
 
@@ -26,13 +25,26 @@ namespace NHibernateHierarchy
             {
                 var top = new Organisation("Top Level");
                 
-                foreach (var name in Enumerable.Range(1,10).Select(i => "Child " + i))
-                {
-                    top.SubItems.Add(new Organisation(name, parent:top));
-                }
+                top.AddSubItem(new Organisation("Child 1"));
+                
+
+                new Organisation("Child 2", top);
 
                 session.Save(top);
                 
+
+                transaction.Commit();
+            }
+
+            using (var session = sessionFactory.OpenSession())
+            using(var  transaction = session.BeginTransaction())
+            {
+                var topLevel = session.QueryOver<Organisation>().Where(o => o.Name == "Top Level").SingleOrDefault();
+
+                foreach (var subItem in topLevel.SubItems)
+                {
+                    Console.WriteLine(subItem.Name);
+                }
 
                 transaction.Commit();
             }
